@@ -18,7 +18,6 @@ AddEventHandler('hs-deliveryjob:reward', function()
     else
         xPlayer.addInventoryItem(item, count)
     end
-
     -- Discord Logs:
     if HS.discordLogs then
         playerName = GetPlayerName(source)

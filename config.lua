@@ -3,13 +3,13 @@ HS = {}
 -- Paste your WebHook to server/sv_webhook
 HS.discordLogs = false -- false/true
 
--- Update Check:
+-- Update-Check:
 HS.Updates = true -- false/true
 
 -- Reward amounts:
 HS.reward = { 
-    min = 250,  -- Minimum reward from a delivery
-    max = 500   -- Maximum reward from a delivery
+    min = 300,  -- Minimum reward from a delivery
+    max = 600   -- Maximum reward from a delivery
 }
 
 -- The location to start the job
@@ -18,6 +18,31 @@ HS.locations = {
     vehicleSpawn = {
         spawnPos = vector3(106.0365, -1814.0081, 26.3405),  -- Vehicle spawn location
         heading = 140.5                                     -- Spawned vehicle heading
+    }
+}
+
+-- All blip settings:
+HS.Blips = {
+    -- Job start blip:
+    jobStart = {
+        text = "Delivery Job", -- Blip label
+        blipSprite = 525,
+        blipScale = 1.0,
+        blipColour = 56
+    },
+    -- Delivery destination blip:
+    destination = {
+        text = "Delivery Destination", -- Blip label
+        blipSprite = 478,
+        blipScale = 1.15,
+        blipColour = 56
+    },
+    -- Return van blip:
+    returnVeh = {
+        text = "Return Your Van", -- Blip label
+        blipSprite = 525,
+        blipScale = 1.15,
+        blipColour = 56
     }
 }
 
@@ -108,7 +133,6 @@ HS.DeliveryNPC = {
 
 -- Waiting npc animation:
 HS.DeliveryNPCAnim = {
-    anim = 'move_characters@lester@waiting_caneup',
+    anim = 'amb@world_human_hang_out_street@Female_arm_side@idle_a',
     dict = 'idle_a'
-
 }

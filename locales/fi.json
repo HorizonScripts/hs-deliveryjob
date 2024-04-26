@@ -5,9 +5,11 @@
     "q_continue": "Jatka kuljettamista?",
     "yes": "KYLLÄ",
     "no": "EI",
+    "return": "Palaa",
     "go_return_van": "Vie ajoneuvosi takaisin lisäpalkkiota vastaan!",
     "go_to_next_location": "Mene seuraavaan sijaintiin!",
     "delivery_location_blip": "Kuljetus",
+    "return_van_blip": "Palauta kuljetusajoneuvo",
     "give_delivery": "Kirjaa kuljetus",
     "remove_vehicle": "Palauta ajoneuvo",
     "continue_job": "Jatka työskentelyä",
@@ -15,7 +17,8 @@
     "clocked_off_work": "Lopetit työskentelyn!",
     "not_in_job": "Aloita ensin työ aloituspisteestä!",
     "start_delivery": "Aloita kuljettaminen",
-    "spawns_van": "Otta kuljetusajoneuvo ja aloita kuljetus",
+    "spawns_van": "Ota kuljetusajoneuvo ja aloita kuljetus",
     "already_in_job": "Suorita aijempi kuljetus ennen uuden vastaanottamista!",
-    "delivery_completed": "Teit kuljetuksen!"
+    "delivery_completed": "Teit kuljetuksen!",
+    "return_rewarded": "Sait palkkion kuljetusajoneuvon palauttamisesta!"
 }

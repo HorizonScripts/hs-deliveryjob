@@ -2,8 +2,11 @@ local ESX = exports['es_extended']:getSharedObject()
 
 lib.locale()
 
+local jobVan = nil
+
 pedSpawned = false
 injob = false
+hasDelivered = 0
 
 RegisterNetEvent('hs-deliveryjob:startjob')
 AddEventHandler('hs-deliveryjob:startjob', function()
@@ -24,112 +27,11 @@ AddEventHandler('hs-deliveryjob:startjob', function()
 
     injob = true
 
-    ESX.Game.SpawnVehicle(HS.jobvehicle, HS.locations.vehicleSpawn.spawnPos, HS.locations.vehicleSpawn.heading , function(jobVan)
+    ESX.Game.SpawnVehicle(HS.jobvehicle, HS.locations.vehicleSpawn.spawnPos, HS.locations.vehicleSpawn.heading , function(jobVan2)
+        jobVan = jobVan2
         local deliveryLoc = HS.Coords[math.random(#HS.Coords)]
         continueJob(deliveryLoc)
     end)
-end)
-
-CreateThread(function()
-    -- Context menu for starting delivery:
-    lib.registerContext({
-        id = 'hs-startmenu',
-        title = locale('delivery_job_title'),
-        options = {
-            {
-                title = locale('start_delivery'),
-                description = locale("spawns_van"),
-                icon = 'fa-solid fa-box',
-                onSelect = function()
-                    if not injob then
-                        TriggerEvent('hs-deliveryjob:startjob')
-                    else
-                        lib.notify({
-                            title = locale('delivery_job_title'),
-                            description = locele('already_in_job'),
-                            type = 'error'
-                        })
-                    end
-                end,
-            },
-            {
-                title = 'Return',
-                icon = 'fa-solid fa-arrow-left',
-                onSelect = function()
-                    lib.hideContext()
-                end,
-            }
-        }
-    })
-    -- Context menu for checking if person wants to continue delivering:
-    lib.registerContext({
-        id = 'hs-continuemenu',
-        canClose = false,
-        title = locale('q_continue'),
-        options = {
-            {
-                title = locale('yes'),
-                icon = 'fa-regular fa-circle-check',
-                onSelect = function()
-                    if injob then
-                        local deliveryLoc = HS.Coords[math.random(#HS.Coords)]
-                        continueJob(deliveryLoc)
-                    else
-                        -- Just there for errors:
-                        lib.notify({
-                            title = locale('delivery_job_title'),
-                            description = locale('go_to_start_pos'),
-                            type = 'error'
-                        })
-                        injob = false
-                    end
-                end,
-            },
-            {
-                title = locale('no'),
-                icon = 'fa-regular fa-circle-xmark',
-                onSelect = function()
-
-                    RemoveBlip(blip)
-                    lib.notify({
-                        title = locale('delivery_job_title'),
-                        description = locale('go_return_van'),
-                        type = 'inform'
-                    })
-                end,
-            }
-        }
-
-    })
-
-    -- Context menu for deleting vehicle / continuing job:
-    lib.registerContext({
-        id = 'hs-removeVehMenu',
-        title = locale('delivery_job_title'),
-        options = {
-            {
-                title = locale('remove_vehicle'),
-                icon = 'fa-solid fa-box',
-                onSelect = function()
-                    if injob then
-                        DeleteBlip()
-                        exports.ox_target:removeZone('getReward') -- Removes old delivery location
-                        injob = false
-                        lib.notify({
-                            title = locale('clocked_off_work'),
-                            type = 'success'
-                        })
-                    else
-                        lib.notify({
-                            title = locale('not_in_job'),
-                            type = 'error'
-                        })
-                    end
-                end,
-            }
-        }
-    })
-
 end)
 
 exports.ox_target:addSphereZone({
@@ -216,7 +118,7 @@ function spawnNPC(x, y, z, heading, pedModel)
 end
 
 function continueJob(deliveryLoc)
-
+    
     local pedModel = HS.DeliveryNPC[math.random(#HS.DeliveryNPC)]
     local spawnedPed = spawnNPC(deliveryLoc.x, deliveryLoc.y, deliveryLoc.z, deliveryLoc.w, pedModel)
 
@@ -226,17 +128,16 @@ function continueJob(deliveryLoc)
         type = 'inform'
     })
 
-    local blip = AddBlipForCoord(deliveryLoc)
-    SetBlipSprite(blip, 478)
-    SetBlipRoute(blip, true)
-    SetBlipRouteColour(blip, 57)
-    SetBlipColour(blip, 57)
-    SetBlipScale(blip, 1.1)
-    AddTextComponentString(locale('delivery_location_blip'))
-
-    function DeleteBlip()
-        RemoveBlip(blip)
-    end
+    local newDeliveryBlip = AddBlipForCoord(deliveryLoc)
+        SetBlipSprite(newDeliveryBlip, HS.Blips.destination.blipSprite)
+        SetBlipDisplay(newDeliveryBlip, 2)
+        SetBlipColour(newDeliveryBlip, HS.Blips.destination.blipColour)
+        SetBlipScale(newDeliveryBlip, HS.Blips.destination.blipScale)
+            BeginTextCommandSetBlipName("STRING")
+        AddTextComponentString(HS.Blips.destination.text)
+        EndTextCommandSetBlipName(newDeliveryBlip)
+        SetBlipRoute(newDeliveryBlip, true)
+        SetBlipRouteColour(newDeliveryBlip, HS.Blips.destination.blipColour)
 
     exports.ox_target:addSphereZone({
         name = 'getReward',
@@ -251,10 +152,48 @@ function continueJob(deliveryLoc)
                 label = locale('give_delivery'),
                 onSelect = function()
                     Wait(50)
-                    RemoveBlip(blip)
+                    RemoveBlip(newDeliveryBlip)
                     deliveryAnim(deliveryLoc)
                 end
             }}
+    })
+
+    -- Context menu for deleting vehicle / continuing job:
+    lib.registerContext({
+        id = 'hs-removeVehMenu',
+        title = locale('delivery_job_title'),
+        options = {
+            {
+                title = locale('remove_vehicle'),
+                icon = 'fa-solid fa-box',
+                onSelect = function()
+                    if injob then
+                        ESX.Game.DeleteVehicle(jobVan)
+                        exports.ox_target:removeZone('getReward') -- Removes old delivery location
+                        RemoveBlip(newDeliveryBlip)
+                        RemoveBlip(returnBlip)
+                        injob = false
+                        lib.notify({
+                            title = locale('clocked_off_work'),
+                            type = 'success'
+                        })
+                        if hasDelivered >= 2 then
+                            TriggerServerEvent('hs-deliveryjob:reward')
+                            hasDelivered = 0
+                            lib.notify({
+                                title = locale('return_rewarded'),
+                                type = 'success'
+                            })
+                        end
+                    else
+                        lib.notify({
+                            title = locale('not_in_job'),
+                            type = 'error'
+                        })
+                    end
+                end,
+            }
+        }
     })
 end
 
@@ -277,11 +216,12 @@ function deliveryAnim(deliveryLoc)
         ClearPedTasksImmediately(xPlayer)
         lib.notify({
             title = locale('delivery_job_title'),
-            description = locale('delivery_completed'),
+            description = 'You completed the delivery!',
             type = 'success'
         })
         exports.ox_target:removeZone('getReward') -- Removes old delivery location
         TriggerServerEvent('hs-deliveryjob:reward')
+        hasDelivered = hasDelivered + 1
         Wait(250)
         lib.showContext('hs-continuemenu')
         local ped = ESX.Game.GetClosestPed(deliveryLoc)
@@ -289,3 +229,99 @@ function deliveryAnim(deliveryLoc)
         DeletePed(ped)
     end)
 end
+
+CreateThread(function()
+    -- Context menu for starting delivery:
+    lib.registerContext({
+        id = 'hs-startmenu',
+        title = locale('delivery_job_title'),
+        options = {
+            {
+                title = locale('start_delivery'),
+                description = locale('spawns_van'),
+                icon = 'fa-solid fa-box',
+                onSelect = function()
+                    if not injob then
+                        TriggerEvent('hs-deliveryjob:startjob')
+                    else
+                        lib.notify({
+                            title = locale('delivery_job_title'),
+                            description = locale('already_in_job'),
+                            type = 'error'
+                        })
+                    end
+                end,
+            },
+            {
+                title = locale('return'),
+                icon = 'fa-solid fa-arrow-left',
+                onSelect = function()
+                    lib.hideContext()
+                end,
+            }
+        }
+    })
+    -- Context menu for checking if person wants to continue delivering:
+    lib.registerContext({
+        id = 'hs-continuemenu',
+        canClose = false,
+        title = locale('q_continue'),
+        options = {
+            {
+                title = locale('yes'),
+                icon = 'fa-regular fa-circle-check',
+                onSelect = function()
+                    if injob then
+                        local deliveryLoc = HS.Coords[math.random(#HS.Coords)]
+                        continueJob(deliveryLoc)
+                    else
+                        -- Just there for errors:
+                        lib.notify({
+                            title = locale('delivery_job_title'),
+                            description = locale('go_to_start_pos'),
+                            type = 'error'
+                        })
+                        injob = false
+                    end
+                end,
+            },
+            {
+                title = locale('no'),
+                icon = 'fa-regular fa-circle-xmark',
+                onSelect = function()
+                    local returnBlip = AddBlipForCoord(HS.locations.vehicleSpawn.spawnPos)
+                        SetBlipSprite(returnBlip, HS.Blips.returnVeh.blipSprite)
+                        SetBlipDisplay(returnBlip, 2)
+                        SetBlipColour(returnBlip, HS.Blips.returnVeh.blipColour)
+                        SetBlipScale(returnBlip, HS.Blips.returnVeh.blipScale)
+                            BeginTextCommandSetBlipName("STRING")
+                        AddTextComponentString(HS.Blips.returnVeh.text)
+                        EndTextCommandSetBlipName(returnBlip)
+                        SetBlipRoute(returnBlip, true)
+                        SetBlipRouteColour(returnBlip, HS.Blips.returnVeh.blipColour)
+
+                    lib.notify({
+                        title = locale('delivery_job_title'),
+                        description = locale('go_return_van'),
+                        type = 'inform'
+                    })
+                end,
+            }
+        }
+
+    })
+
+end)
+
+-- Start position blip:
+CreateThread(function()
+    startBlip = AddBlipForCoord(HS.locations.startPos)
+    SetBlipSprite(startBlip, HS.Blips.jobStart.blipSprite)
+    SetBlipDisplay(startBlip, 4)
+    SetBlipScale(startBlip, HS.Blips.jobStart.blipScale)
+    SetBlipColour(startBlip, HS.Blips.jobStart.blipColour)
+    SetBlipAsShortRange(startBlip, true)
+        BeginTextCommandSetBlipName("STRING")
+    AddTextComponentString(HS.Blips.jobStart.text)
+    EndTextCommandSetBlipName(startBlip)
+end)

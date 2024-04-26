@@ -5,9 +5,11 @@
     "q_continue": "Continue Delivering?",
     "yes": "YES",
     "no": "NO",
+    "return": "Return",
     "go_return_van": "Go return the van for an extra payment!",
     "go_to_next_location": "Go to the next location!",
     "delivery_location_blip": "Delivery Destination",
+    "return_van_blip": "Return Van",
     "give_delivery": "Sign-Off delivery",
     "remove_vehicle": "Delete vehicle",
     "continue_job": "Continue working",
@@ -17,5 +19,6 @@
     "start_delivery": "Start Delivery",
     "spawns_van": "Spawns a delivery vehicle",
     "already_in_job": "Complete your last delivery before taking a new one!",
-    "delivery_completed": "You completed the delivery!"
+    "delivery_completed": "You completed the delivery!",
+    "return_rewarded": "You recieved a reward for returning your van!"
 }
