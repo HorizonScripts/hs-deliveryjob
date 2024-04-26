@@ -1,18 +1,18 @@
 # HS-DeliveryJob:
 
-** Features:
+# Features:
   - ESX - Framework
   - Deliver packages with a van around the city!
   - Non-WL job
   - Continue job until you choose to stop working
   - Clean UI
 
-** Dependencies:
+# Dependencies:
   - ESX server
   - ox_lib
   - ox_target
 
-** Download:
+# Download:
   1. Download dependencies
   2. Download https://github.com/HorizonScripts/hs-deliveryjob
   3. Drag-n-Drop file
