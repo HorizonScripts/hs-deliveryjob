@@ -1,0 +1,21 @@
+{
+    "discord_log_message": "Pelaaja: %s teki kuljetuksen ja tienasi: money %s x",
+    "delivery_job_title": "Kuljetustyö",
+    "go_to_start_pos": "Mene työn aloituspisteeseen!",
+    "q_continue": "Jatka kuljettamista?",
+    "yes": "KYLLÄ",
+    "no": "EI",
+    "go_return_van": "Vie ajoneuvosi takaisin lisäpalkkiota vastaan!",
+    "go_to_next_location": "Mene seuraavaan sijaintiin!",
+    "delivery_location_blip": "Kuljetus",
+    "give_delivery": "Kirjaa kuljetus",
+    "remove_vehicle": "Palauta ajoneuvo",
+    "continue_job": "Jatka työskentelyä",
+    "continue_job_2": "Vastaanota uusi kuljetus",
+    "clocked_off_work": "Lopetit työskentelyn!",
+    "not_in_job": "Aloita ensin työ aloituspisteestä!",
+    "start_delivery": "Aloita kuljettaminen",
+    "spawns_van": "Otta kuljetusajoneuvo ja aloita kuljetus",
+    "already_in_job": "Suorita aijempi kuljetus ennen uuden vastaanottamista!",
+    "delivery_completed": "Teit kuljetuksen!"
+}

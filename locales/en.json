@@ -1,0 +1,21 @@
+{
+    "discord_log_message": "Player: %s delivered a package and recieved: money %s x",
+    "delivery_job_title": "Delivery Job",
+    "go_to_start_pos": "Go to the starting location!",
+    "q_continue": "Continue Delivering?",
+    "yes": "YES",
+    "no": "NO",
+    "go_return_van": "Go return the van for an extra payment!",
+    "go_to_next_location": "Go to the next location!",
+    "delivery_location_blip": "Delivery Destination",
+    "give_delivery": "Sign-Off delivery",
+    "remove_vehicle": "Delete vehicle",
+    "continue_job": "Continue working",
+    "continue_job_2": "Get a new delivery destination",
+    "clocked_off_work": "You clocked off from work!",
+    "not_in_job": "You are not working!",
+    "start_delivery": "Start Delivery",
+    "spawns_van": "Spawns a delivery vehicle",
+    "already_in_job": "Complete your last delivery before taking a new one!",
+    "delivery_completed": "You completed the delivery!"
+}
