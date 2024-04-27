@@ -151,7 +151,6 @@ function continueJob(deliveryLoc)
                 icon = 'fa-solid fa-box',
                 label = locale('give_delivery'),
                 onSelect = function()
-                    Wait(50)
                     RemoveBlip(newDeliveryBlip)
                     deliveryAnim(deliveryLoc)
                 end
@@ -222,7 +221,6 @@ function deliveryAnim(deliveryLoc)
         exports.ox_target:removeZone('getReward') -- Removes old delivery location
         TriggerServerEvent('hs-deliveryjob:reward')
         hasDelivered = hasDelivered + 1
-        Wait(250)
         lib.showContext('hs-continuemenu')
         local ped = ESX.Game.GetClosestPed(deliveryLoc)
         Wait(15000)
